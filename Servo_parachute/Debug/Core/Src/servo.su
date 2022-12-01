@@ -1,0 +1,2 @@
+../Core/Src/servo.c:9:6:servoSetAngleLeft	24	static
+../Core/Src/servo.c:16:6:servoSetAngleRight	24	static
