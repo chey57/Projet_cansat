@@ -21,6 +21,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include <math.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -45,6 +46,10 @@
 
 /* USER CODE BEGIN PV */
 uint8_t uartTxBuffer[32];
+float teta_can=0;   //donné par le magnétomètre
+float teta_cible=0; // Calculé grâce à la position GPS
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -70,9 +75,9 @@ int __io_putchar(int ch)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	unsigned int angleLeft = 0;
-	uint8_t msgLength;
-	int position=70;
+	//unsigned int angleLeft = 0;
+	//uint8_t msgLength;
+	int position=100;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -97,6 +102,18 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+
+  float f=atan2(-1,0);
+  printf("resulat : %.2f \r\n",f);
+
+  for (int i=350;i<=400;i++){
+	  choice_direction_intensity(i);
+	  printf("delta_teta: %d \r\n",i);
+	  HAL_Delay(100);
+  }
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -114,10 +131,9 @@ int main(void)
 	  		  }
 	  		  servoSetAngleLeft(angleLeft);*/
 
-	  	  	  position +=10;
-	  	  	  printf("angle : %d \r\n",position);
-	  		  TIM1->CCR1 = position;
-	  		  HAL_Delay(1000);
+
+
+
 
 	  		  //msgLength = snprintf(uartTxBuffer,32,"angleLeft : %4d \r\n",angleLeft);
 	  		  //HAL_UART_Transmit(&htim1, uartTxBuffer, msgLength, 100);
